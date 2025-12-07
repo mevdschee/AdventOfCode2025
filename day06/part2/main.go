@@ -30,10 +30,7 @@ func main() {
 	operators := re.FindAllString(lines[len(lines)-1], -1)
 	lines = lines[:len(lines)-1]
 
-	fmt.Printf("operators: %v\n", operators)
-
 	// build numbers slice
-
 	numbers := [][]int{}
 	offset := 0
 	for i, op := range operators {
@@ -46,7 +43,6 @@ func main() {
 				num += string(line[offset+j])
 			}
 			if strings.TrimSpace(num) != "" {
-				fmt.Printf("num: [%s]\n", num)
 				n, _ := strconv.Atoi(strings.TrimSpace(num))
 				ints = append(ints, n)
 			}
