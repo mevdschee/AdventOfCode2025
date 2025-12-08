@@ -80,34 +80,28 @@ func main() {
 		return parent[x]
 	}
 
-	// Union by rank
-	union := func(x, y int) bool {
-		rootX := find(x)
-		rootY := find(y)
-
-		if rootX == rootY {
-			return false
-		}
-
-		if rank[rootX] < rank[rootY] {
-			parent[rootX] = rootY
-		} else if rank[rootX] > rank[rootY] {
-			parent[rootY] = rootX
-		} else {
-			parent[rootY] = rootX
-			rank[rootX]++
-		}
-		return true
-	}
-
 	connections := 0
 	attempts := 0
 
 	for _, edge := range edges {
 		attempts++
-		if union(edge.i, edge.j) {
+
+		// Union by rank
+		rootX := find(edge.i)
+		rootY := find(edge.j)
+
+		if rootX != rootY {
+			if rank[rootX] < rank[rootY] {
+				parent[rootX] = rootY
+			} else if rank[rootX] > rank[rootY] {
+				parent[rootY] = rootX
+			} else {
+				parent[rootY] = rootX
+				rank[rootX]++
+			}
 			connections++
 		}
+
 		if attempts == 1000 {
 			break
 		}
