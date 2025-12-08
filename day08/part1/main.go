@@ -64,7 +64,7 @@ func main() {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// build adjacency list by connecting the 1000 closest pairs
+	// connect the 1000 closest pairs
 	connected := make([]map[int]bool, n)
 	for i := range n {
 		connected[i] = make(map[int]bool)

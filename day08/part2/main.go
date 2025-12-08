@@ -64,14 +64,18 @@ func main() {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// build adjacency list by connecting closest pairs until all in one circuit
+	// connect the 1000 closest pairs
 	connected := make([]map[int]bool, n)
 	for i := range n {
 		connected[i] = make(map[int]bool)
 	}
 
-	// count circuits using DFS
-	countCircuits := func() int {
+	var lastEdge Edge
+	for _, edge := range edges {
+		connected[edge.i][edge.j] = true
+		connected[edge.j][edge.i] = true
+
+		// Count circuits using DFS
 		visited := make([]bool, n)
 		circuits := 0
 
@@ -91,15 +95,8 @@ func main() {
 				circuits++
 			}
 		}
-		return circuits
-	}
 
-	var lastEdge Edge
-	for _, edge := range edges {
-		connected[edge.i][edge.j] = true
-		connected[edge.j][edge.i] = true
-
-		if countCircuits() == 1 {
+		if circuits == 1 {
 			lastEdge = edge
 			break
 		}
