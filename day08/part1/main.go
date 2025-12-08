@@ -129,7 +129,7 @@ func main() {
 
 	// Multiply the three largest
 	total := 1
-	for i := 0; i < 3 && i < len(sizes); i++ {
+	for i := range sizes[:3] {
 		total *= sizes[i]
 	}
 
