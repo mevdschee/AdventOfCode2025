@@ -46,7 +46,7 @@ func main() {
 
 	n := len(points)
 
-	// Create all edges with distances
+	// create all edges with distances
 	edges := []Edge{}
 	for i := range n {
 		for j := i + 1; j < n; j++ {
@@ -59,18 +59,18 @@ func main() {
 		}
 	}
 
-	// Sort edges by distance
+	// sort edges by distance
 	sort.Slice(edges, func(a, b int) bool {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// Build adjacency list by connecting closest pairs until all in one circuit
+	// build adjacency list by connecting closest pairs until all in one circuit
 	connected := make([]map[int]bool, n)
 	for i := range n {
 		connected[i] = make(map[int]bool)
 	}
 
-	// Count circuits using DFS
+	// count circuits using DFS
 	countCircuits := func() int {
 		visited := make([]bool, n)
 		circuits := 0

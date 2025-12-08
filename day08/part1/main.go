@@ -46,7 +46,7 @@ func main() {
 
 	n := len(points)
 
-	// Create all edges with distances
+	// create all edges with distances
 	edges := []Edge{}
 	for i := range n {
 		for j := i + 1; j < n; j++ {
@@ -59,12 +59,12 @@ func main() {
 		}
 	}
 
-	// Sort edges by distance
+	// sort edges by distance
 	sort.Slice(edges, func(a, b int) bool {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// Build adjacency list by connecting the 1000 closest pairs
+	// build adjacency list by connecting the 1000 closest pairs
 	connected := make([]map[int]bool, n)
 	for i := range n {
 		connected[i] = make(map[int]bool)
@@ -80,7 +80,7 @@ func main() {
 		}
 	}
 
-	// Find all circuits using DFS
+	// find all circuits using DFS
 	visited := make([]bool, n)
 	circuits := [][]int{}
 
@@ -103,12 +103,14 @@ func main() {
 		}
 	}
 
-	// Get the three largest circuit sizes
+	// get the three largest circuit sizes
 	sizes := []int{}
 	for _, circuit := range circuits {
 		sizes = append(sizes, len(circuit))
 	}
-	sort.Sort(sort.Reverse(sort.IntSlice(sizes))) // Multiply the three largest
+	sort.Sort(sort.Reverse(sort.IntSlice(sizes)))
+
+	// multiply the three largest
 	total := 1
 	for i := range sizes[:3] {
 		total *= sizes[i]
