@@ -64,44 +64,44 @@ func main() {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// Use Union-Find to connect until all in one circuit
-	parent := make([]int, n)
-	rank := make([]int, n)
+	// Build adjacency list by connecting closest pairs until all in one circuit
+	connected := make([]map[int]bool, n)
 	for i := range n {
-		parent[i] = i
+		connected[i] = make(map[int]bool)
 	}
 
-	// Find with path compression
-	var find func(int) int
-	find = func(x int) int {
-		if parent[x] != x {
-			parent[x] = find(parent[x])
+	// Count circuits using DFS
+	countCircuits := func() int {
+		visited := make([]bool, n)
+		circuits := 0
+
+		var dfs func(int)
+		dfs = func(node int) {
+			visited[node] = true
+			for neighbor := range connected[node] {
+				if !visited[neighbor] {
+					dfs(neighbor)
+				}
+			}
 		}
-		return parent[x]
+
+		for i := range n {
+			if !visited[i] {
+				dfs(i)
+				circuits++
+			}
+		}
+		return circuits
 	}
 
-	numCircuits := n
 	var lastEdge Edge
-
 	for _, edge := range edges {
-		// Union by rank
-		rootX := find(edge.i)
-		rootY := find(edge.j)
+		connected[edge.i][edge.j] = true
+		connected[edge.j][edge.i] = true
 
-		if rootX != rootY {
-			if rank[rootX] < rank[rootY] {
-				parent[rootX] = rootY
-			} else if rank[rootX] > rank[rootY] {
-				parent[rootY] = rootX
-			} else {
-				parent[rootY] = rootX
-				rank[rootX]++
-			}
-			numCircuits--
-			if numCircuits == 1 {
-				lastEdge = edge
-				break
-			}
+		if countCircuits() == 1 {
+			lastEdge = edge
+			break
 		}
 	}
 

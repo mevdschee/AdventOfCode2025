@@ -64,64 +64,51 @@ func main() {
 		return edges[a].distance < edges[b].distance
 	})
 
-	// Use Union-Find to connect the 1000 closest pairs
-	parent := make([]int, n)
-	rank := make([]int, n)
+	// Build adjacency list by connecting the 1000 closest pairs
+	connected := make([]map[int]bool, n)
 	for i := range n {
-		parent[i] = i
+		connected[i] = make(map[int]bool)
 	}
 
-	// Find with path compression
-	var find func(int) int
-	find = func(x int) int {
-		if parent[x] != x {
-			parent[x] = find(parent[x])
-		}
-		return parent[x]
-	}
-
-	connections := 0
 	attempts := 0
-
 	for _, edge := range edges {
+		connected[edge.i][edge.j] = true
+		connected[edge.j][edge.i] = true
 		attempts++
-
-		// Union by rank
-		rootX := find(edge.i)
-		rootY := find(edge.j)
-
-		if rootX != rootY {
-			if rank[rootX] < rank[rootY] {
-				parent[rootX] = rootY
-			} else if rank[rootX] > rank[rootY] {
-				parent[rootY] = rootX
-			} else {
-				parent[rootY] = rootX
-				rank[rootX]++
-			}
-			connections++
-		}
-
 		if attempts == 1000 {
 			break
 		}
 	}
 
-	// Count circuit sizes
-	circuitSizes := make(map[int]int)
+	// Find all circuits using DFS
+	visited := make([]bool, n)
+	circuits := [][]int{}
+
+	var dfs func(int, []int) []int
+	dfs = func(node int, circuit []int) []int {
+		visited[node] = true
+		circuit = append(circuit, node)
+		for neighbor := range connected[node] {
+			if !visited[neighbor] {
+				circuit = dfs(neighbor, circuit)
+			}
+		}
+		return circuit
+	}
+
 	for i := range n {
-		root := find(i)
-		circuitSizes[root]++
+		if !visited[i] {
+			circuit := dfs(i, []int{})
+			circuits = append(circuits, circuit)
+		}
 	}
 
 	// Get the three largest circuit sizes
 	sizes := []int{}
-	for _, size := range circuitSizes {
-		sizes = append(sizes, size)
+	for _, circuit := range circuits {
+		sizes = append(sizes, len(circuit))
 	}
-	sort.Sort(sort.Reverse(sort.IntSlice(sizes)))
-
-	// Multiply the three largest
+	sort.Sort(sort.Reverse(sort.IntSlice(sizes))) // Multiply the three largest
 	total := 1
 	for i := range sizes[:3] {
 		total *= sizes[i]
