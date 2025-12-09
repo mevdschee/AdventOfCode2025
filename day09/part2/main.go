@@ -97,13 +97,6 @@ func main() {
 						valid = false
 					}
 				}
-				// check final points to ensure we didn't skip
-				if valid && !isInsideOrOn(Point{x: maxX, y: minY}, points) {
-					valid = false
-				}
-				if valid && !isInsideOrOn(Point{x: maxX, y: maxY}, points) {
-					valid = false
-				}
 
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
@@ -114,13 +107,6 @@ func main() {
 					if valid && !isInsideOrOn(Point{x: maxX, y: y}, points) {
 						valid = false
 					}
-				}
-				// check final points
-				if valid && !isInsideOrOn(Point{x: minX, y: maxY}, points) {
-					valid = false
-				}
-				if valid && !isInsideOrOn(Point{x: maxX, y: maxY}, points) {
-					valid = false
 				}
 			}
 
