@@ -14,7 +14,7 @@ type Point struct {
 	y int
 }
 
-const SAMPLE_DENSITY = 100
+const SAMPLES = 100
 
 func main() {
 	file, err := os.Open("input")
@@ -76,7 +76,7 @@ func main() {
 
 			if valid {
 				// sample edges to ensure they stay inside
-				stepSize := max((maxX-minX)/SAMPLE_DENSITY, (maxY-minY)/SAMPLE_DENSITY, 1)
+				stepSize := max((maxX-minX)/SAMPLES, (maxY-minY)/SAMPLES, 1)
 
 				// check top and bottom edges
 				for x := minX; x <= maxX && valid; x += stepSize {
