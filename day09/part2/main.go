@@ -67,10 +67,7 @@ func main() {
 
 			valid := true
 			for _, corner := range corners {
-				if !isInsideOrOn(corner, points) {
-					valid = false
-					break
-				}
+				valid = isInsideOrOn(valid, corner, points)
 			}
 
 			if valid {
@@ -79,23 +76,15 @@ func main() {
 
 				// check top and bottom edges
 				for x := minX; x <= maxX && valid; x += sampleDensity {
-					if !isInsideOrOn(Point{x, minY}, points) {
-						valid = false
-					}
-					if valid && !isInsideOrOn(Point{x, maxY}, points) {
-						valid = false
-					}
+					valid = isInsideOrOn(valid, Point{x, minY}, points)
+					valid = isInsideOrOn(valid, Point{x, maxY}, points)
 				}
 
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
 				for y := minY; y <= maxY && valid; y += sampleDensity {
-					if !isInsideOrOn(Point{minX, y}, points) {
-						valid = false
-					}
-					if valid && !isInsideOrOn(Point{maxX, y}, points) {
-						valid = false
-					}
+					valid = isInsideOrOn(valid, Point{minX, y}, points)
+					valid = isInsideOrOn(valid, Point{maxX, y}, points)
 				}
 			}
 
@@ -113,7 +102,10 @@ func main() {
 }
 
 // utility function
-func isInsideOrOn(p Point, polygon []Point) bool {
+func isInsideOrOn(valid bool, p Point, polygon []Point) bool {
+	if !valid {
+		return false
+	}
 	return isOn(p, polygon) || isInside(p, polygon)
 }
 
