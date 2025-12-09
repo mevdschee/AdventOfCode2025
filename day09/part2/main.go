@@ -113,6 +113,7 @@ func main() {
 
 // utility function
 func isInsideOrOn(p Point, polygon []Point) bool {
+	// check if point is on any edge of the polygon
 	for i := range len(polygon) {
 		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
 		if v1.x == v2.x && p.x == v1.x && p.y >= min(v1.y, v2.y) && p.y <= max(v1.y, v2.y) {
@@ -122,7 +123,7 @@ func isInsideOrOn(p Point, polygon []Point) bool {
 			return true
 		}
 	}
-	// count ray intersections
+	// check if point is inside the polygon by counting ray intersections
 	count := 0
 	n := len(polygon)
 	for i := range n {
