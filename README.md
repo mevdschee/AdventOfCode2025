@@ -1,7 +1,6 @@
 # AdventOfCode2025
 
-Advent of Code 2025 puzzle solutions in VB.net
-
+Advent of Code 2025 puzzle solutions in Go
 See: http://adventofcode.com/2025/
 
 ## Other years
