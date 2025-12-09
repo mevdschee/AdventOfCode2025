@@ -113,25 +113,22 @@ func main() {
 }
 
 func isInside(p Point, polygon []Point) bool {
-	// ray casting algorithm - optimized version
+	// count ray intersections
 	count := 0
 	n := len(polygon)
 	for i := range n {
 		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
 
-		// skip horizontal edges
-		if v1.y == v2.y {
-			continue
-		}
-
 		// check if the edge is crossing the ray
 		if (v1.y <= p.y && p.y < v2.y) || (v2.y <= p.y && p.y < v1.y) {
 			// compute x-coordinate of intersection
 			x := v1.x + (p.y-v1.y)*(v2.x-v1.x)/(v2.y-v1.y)
+			// check if the intersection is to the right of the point
 			if p.x < x {
 				count++
 			}
 		}
 	}
+	// odd count means inside
 	return count%2 == 1
 }
