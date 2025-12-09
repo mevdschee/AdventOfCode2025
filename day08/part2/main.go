@@ -75,7 +75,7 @@ func main() {
 		connected[edge.i][edge.j] = true
 		connected[edge.j][edge.i] = true
 
-		// Count circuits using DFS
+		// count circuits using DFS
 		visited := make([]bool, n)
 		circuits := 0
 
