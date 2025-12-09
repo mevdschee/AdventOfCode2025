@@ -67,7 +67,9 @@ func main() {
 
 			valid := true
 			for _, corner := range corners {
-				valid = isInsideOrOn(valid, corner, points)
+				if valid {
+					valid = isInsideOrOn(corner, points)
+				}
 			}
 
 			if valid {
@@ -76,15 +78,23 @@ func main() {
 
 				// check top and bottom edges
 				for x := minX; x <= maxX && valid; x += sampleDensity {
-					valid = isInsideOrOn(valid, Point{x, minY}, points)
-					valid = isInsideOrOn(valid, Point{x, maxY}, points)
+					if valid {
+						valid = isInsideOrOn(Point{x, minY}, points)
+					}
+					if valid {
+						valid = isInsideOrOn(Point{x, maxY}, points)
+					}
 				}
 
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
 				for y := minY; y <= maxY && valid; y += sampleDensity {
-					valid = isInsideOrOn(valid, Point{minX, y}, points)
-					valid = isInsideOrOn(valid, Point{maxX, y}, points)
+					if valid {
+						valid = isInsideOrOn(Point{minX, y}, points)
+					}
+					if valid {
+						valid = isInsideOrOn(Point{maxX, y}, points)
+					}
 				}
 			}
 
@@ -102,15 +112,16 @@ func main() {
 }
 
 // utility function
-func isInsideOrOn(valid bool, p Point, polygon []Point) bool {
-	if !valid {
-		return false
+func isInsideOrOn(p Point, polygon []Point) bool {
+	for i := range len(polygon) {
+		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
+		if v1.x == v2.x && p.x == v1.x && p.y >= min(v1.y, v2.y) && p.y <= max(v1.y, v2.y) {
+			return true
+		}
+		if v1.y == v2.y && p.y == v1.y && p.x >= min(v1.x, v2.x) && p.x <= max(v1.x, v2.x) {
+			return true
+		}
 	}
-	return isOn(p, polygon) || isInside(p, polygon)
-}
-
-// check if point is inside the polygon
-func isInside(p Point, polygon []Point) bool {
 	// count ray intersections
 	count := 0
 	n := len(polygon)
@@ -129,18 +140,4 @@ func isInside(p Point, polygon []Point) bool {
 	}
 	// odd count means inside
 	return count%2 == 1
-}
-
-// check if point is on any edge of the polygon
-func isOn(p Point, polygon []Point) bool {
-	for i := range len(polygon) {
-		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
-		if v1.x == v2.x && p.x == v1.x && p.y >= min(v1.y, v2.y) && p.y <= max(v1.y, v2.y) {
-			return true
-		}
-		if v1.y == v2.y && p.y == v1.y && p.x >= min(v1.x, v2.x) && p.x <= max(v1.x, v2.x) {
-			return true
-		}
-	}
-	return false
 }
