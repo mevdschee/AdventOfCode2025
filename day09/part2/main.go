@@ -112,6 +112,10 @@ func main() {
 	fmt.Println(maxArea)
 }
 
+func isInsideOrOn(p Point, polygon []Point) bool {
+	return isOn(p, polygon) || isInside(p, polygon)
+}
+
 func isInside(p Point, polygon []Point) bool {
 	// count ray intersections
 	count := 0
@@ -133,7 +137,7 @@ func isInside(p Point, polygon []Point) bool {
 	return count%2 == 1
 }
 
-func isInsideOrOn(p Point, polygon []Point) bool {
+func isOn(p Point, polygon []Point) bool {
 	// check if point is on any edge of the polygon
 	for i := range len(polygon) {
 		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
@@ -144,5 +148,5 @@ func isInsideOrOn(p Point, polygon []Point) bool {
 			return true
 		}
 	}
-	return isInside(p, polygon)
+	return false
 }
