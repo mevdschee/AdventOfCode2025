@@ -32,7 +32,7 @@ func main() {
 		}
 		x, _ := strconv.Atoi(coords[0])
 		y, _ := strconv.Atoi(coords[1])
-		points = append(points, Point{x: x, y: y})
+		points = append(points, Point{x, y})
 	}
 
 	// find largest rectangle with red corners using only green/red tiles
@@ -59,22 +59,11 @@ func main() {
 			}
 
 			// check if rectangle is valid
-			minX, maxX := p1.x, p2.x
-			if minX > maxX {
-				minX, maxX = maxX, minX
-			}
-			minY, maxY := p1.y, p2.y
-			if minY > maxY {
-				minY, maxY = maxY, minY
-			}
+			minX, maxX := min(p1.x, p2.x), max(p1.x, p2.x)
+			minY, maxY := min(p1.y, p2.y), max(p1.y, p2.y)
 
 			// all 4 corners must be inside or on the polygon
-			corners := [4]Point{
-				{x: minX, y: minY},
-				{x: maxX, y: minY},
-				{x: minX, y: maxY},
-				{x: maxX, y: maxY},
-			}
+			corners := [4]Point{{minX, minY}, {maxX, minY}, {minX, maxY}, {maxX, maxY}}
 
 			valid := true
 			for _, corner := range corners {
@@ -90,10 +79,10 @@ func main() {
 
 				// check top and bottom edges
 				for x := minX; x <= maxX && valid; x += sampleDensity {
-					if !isInside(Point{x: x, y: minY}, points) {
+					if !isInside(Point{x, minY}, points) {
 						valid = false
 					}
-					if valid && !isInside(Point{x: x, y: maxY}, points) {
+					if valid && !isInside(Point{x, maxY}, points) {
 						valid = false
 					}
 				}
@@ -101,10 +90,10 @@ func main() {
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
 				for y := minY; y <= maxY && valid; y += sampleDensity {
-					if !isInside(Point{x: minX, y: y}, points) {
+					if !isInside(Point{minX, y}, points) {
 						valid = false
 					}
-					if valid && !isInside(Point{x: maxX, y: y}, points) {
+					if valid && !isInside(Point{maxX, y}, points) {
 						valid = false
 					}
 				}
@@ -128,14 +117,14 @@ func isInside(p Point, polygon []Point) bool {
 	count := 0
 	n := len(polygon)
 	for i := range n {
-		v1 := polygon[i]
-		v2 := polygon[(i+1)%n]
+		v1, v2 := polygon[i], polygon[(i+1)%len(polygon)]
 
 		// skip horizontal edges
 		if v1.y == v2.y {
 			continue
 		}
 
+		// check if the edge is crossing the ray
 		if (v1.y <= p.y && p.y < v2.y) || (v2.y <= p.y && p.y < v1.y) {
 			// compute x-coordinate of intersection
 			x := v1.x + (p.y-v1.y)*(v2.x-v1.x)/(v2.y-v1.y)
