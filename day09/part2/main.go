@@ -62,7 +62,7 @@ func main() {
 			minX, maxX := min(p1.x, p2.x), max(p1.x, p2.x)
 			minY, maxY := min(p1.y, p2.y), max(p1.y, p2.y)
 
-			// all 4 corners must be inside or on the polygon
+			// all 4 corners must be inside the polygon
 			corners := [4]Point{{minX, minY}, {maxX, minY}, {minX, maxY}, {maxX, maxY}}
 
 			valid := true
