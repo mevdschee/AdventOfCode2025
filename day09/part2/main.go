@@ -14,6 +14,8 @@ type Point struct {
 	y int
 }
 
+const SAMPLE_DENSITY = 100
+
 func main() {
 	file, err := os.Open("input")
 	if err != nil {
@@ -74,10 +76,10 @@ func main() {
 
 			if valid {
 				// sample edges to ensure they stay inside
-				sampleDensity := max((maxX-minX)/100, 1)
+				stepSize := max((maxX-minX)/SAMPLE_DENSITY, (maxY-minY)/SAMPLE_DENSITY, 1)
 
 				// check top and bottom edges
-				for x := minX; x <= maxX && valid; x += sampleDensity {
+				for x := minX; x <= maxX && valid; x += stepSize {
 					if valid {
 						valid = isInsideOrOn(Point{x, minY}, points)
 					}
@@ -87,8 +89,7 @@ func main() {
 				}
 
 				// check left and right edges
-				sampleDensity = max((maxY-minY)/100, 1)
-				for y := minY; y <= maxY && valid; y += sampleDensity {
+				for y := minY; y <= maxY && valid; y += stepSize {
 					if valid {
 						valid = isInsideOrOn(Point{minX, y}, points)
 					}
