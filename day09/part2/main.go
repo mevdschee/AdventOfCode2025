@@ -78,7 +78,7 @@ func main() {
 
 			valid := true
 			for _, corner := range corners {
-				if !isInsideOrOn(corner, points) {
+				if !isInside(corner, points) {
 					valid = false
 					break
 				}
@@ -90,10 +90,10 @@ func main() {
 
 				// check top and bottom edges
 				for x := minX; x <= maxX && valid; x += sampleDensity {
-					if !isInsideOrOn(Point{x: x, y: minY}, points) {
+					if !isInside(Point{x: x, y: minY}, points) {
 						valid = false
 					}
-					if valid && !isInsideOrOn(Point{x: x, y: maxY}, points) {
+					if valid && !isInside(Point{x: x, y: maxY}, points) {
 						valid = false
 					}
 				}
@@ -101,10 +101,10 @@ func main() {
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
 				for y := minY; y <= maxY && valid; y += sampleDensity {
-					if !isInsideOrOn(Point{x: minX, y: y}, points) {
+					if !isInside(Point{x: minX, y: y}, points) {
 						valid = false
 					}
-					if valid && !isInsideOrOn(Point{x: maxX, y: y}, points) {
+					if valid && !isInside(Point{x: maxX, y: y}, points) {
 						valid = false
 					}
 				}
@@ -145,42 +145,4 @@ func isInside(p Point, polygon []Point) bool {
 		}
 	}
 	return count%2 == 1
-}
-
-// check if point is inside or on the boundary of polygon
-func isInsideOrOn(p Point, polygon []Point) bool {
-	// first check if on polygon boundary
-	n := len(polygon)
-	for i := range n {
-		v1 := polygon[i]
-		v2 := polygon[(i+1)%n]
-
-		// check if point is on line segment
-		if v1.x == v2.x {
-			// vertical line
-			if p.x == v1.x {
-				minY, maxY := v1.y, v2.y
-				if minY > maxY {
-					minY, maxY = maxY, minY
-				}
-				if p.y >= minY && p.y <= maxY {
-					return true
-				}
-			}
-		} else {
-			// horizontal line
-			if p.y == v1.y {
-				minX, maxX := v1.x, v2.x
-				if minX > maxX {
-					minX, maxX = maxX, minX
-				}
-				if p.x >= minX && p.x <= maxX {
-					return true
-				}
-			}
-		}
-	}
-
-	// then check if inside using ray casting
-	return isInside(p, polygon)
 }
