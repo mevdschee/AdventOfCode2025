@@ -111,7 +111,6 @@ func main() {
 	fmt.Println(maxArea)
 }
 
-// utility function
 func isInsideOrOn(p Point, polygon []Point) bool {
 	// check if point is on any edge of the polygon
 	for i := range len(polygon) {
