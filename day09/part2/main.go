@@ -85,8 +85,7 @@ func main() {
 			}
 
 			if valid {
-				// sample edges more densely to ensure they stay inside
-				// for large rectangles, increase sample density
+				// sample edges to ensure they stay inside
 				sampleDensity := max((maxX-minX)/100, 1)
 
 				// check top and bottom edges
