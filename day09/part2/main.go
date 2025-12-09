@@ -123,18 +123,6 @@ func main() {
 				if valid && !isInsideOrOn(Point{x: maxX, y: maxY}, points) {
 					valid = false
 				}
-
-				// sample interior points in a grid
-				if valid && maxX-minX > 100 && maxY-minY > 100 {
-					gridStep := max((maxX-minX)/10, (maxY-minY)/10)
-					for sx := minX + gridStep; sx < maxX && valid; sx += gridStep {
-						for sy := minY + gridStep; sy < maxY && valid; sy += gridStep {
-							if !isInsideOrOn(Point{x: sx, y: sy}, points) {
-								valid = false
-							}
-						}
-					}
-				}
 			}
 
 			if valid {
