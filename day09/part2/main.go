@@ -76,10 +76,10 @@ func main() {
 
 			if valid {
 				// sample edges to ensure they stay inside
-				stepSize := max((maxX-minX)/SAMPLES, (maxY-minY)/SAMPLES, 1)
+				sampleDistance := max((maxX-minX)/SAMPLES, (maxY-minY)/SAMPLES, 1)
 
 				// check top and bottom edges
-				for x := minX; x <= maxX && valid; x += stepSize {
+				for x := minX; x <= maxX && valid; x += sampleDistance {
 					if valid {
 						valid = isInsideOrOn(Point{x, minY}, points)
 					}
@@ -89,7 +89,7 @@ func main() {
 				}
 
 				// check left and right edges
-				for y := minY; y <= maxY && valid; y += stepSize {
+				for y := minY; y <= maxY && valid; y += sampleDistance {
 					if valid {
 						valid = isInsideOrOn(Point{minX, y}, points)
 					}
