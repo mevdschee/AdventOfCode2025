@@ -65,30 +65,30 @@ func main() {
 			// all 4 corners must be inside or on the polygon
 			corners := [4]Point{{minX, minY}, {maxX, minY}, {minX, maxY}, {maxX, maxY}}
 
-			valid := true
+			invalid := false
 			for _, corner := range corners {
-				valid = isInsideOrOn(valid, corner, points)
+				invalid = isOutside(invalid, corner, points)
 			}
 
-			if valid {
+			if !invalid {
 				// sample edges to ensure they stay inside
 				sampleDensity := max((maxX-minX)/100, 1)
 
 				// check top and bottom edges
-				for x := minX; x <= maxX && valid; x += sampleDensity {
-					valid = isInsideOrOn(valid, Point{x, minY}, points)
-					valid = isInsideOrOn(valid, Point{x, maxY}, points)
+				for x := minX; x <= maxX && !invalid; x += sampleDensity {
+					invalid = isOutside(invalid, Point{x, minY}, points)
+					invalid = isOutside(invalid, Point{x, maxY}, points)
 				}
 
 				// check left and right edges
 				sampleDensity = max((maxY-minY)/100, 1)
-				for y := minY; y <= maxY && valid; y += sampleDensity {
-					valid = isInsideOrOn(valid, Point{minX, y}, points)
-					valid = isInsideOrOn(valid, Point{maxX, y}, points)
+				for y := minY; y <= maxY && !invalid; y += sampleDensity {
+					invalid = isOutside(invalid, Point{minX, y}, points)
+					invalid = isOutside(invalid, Point{maxX, y}, points)
 				}
 			}
 
-			if valid {
+			if !invalid {
 				maxArea = area
 			}
 		}
@@ -102,11 +102,8 @@ func main() {
 }
 
 // utility function
-func isInsideOrOn(valid bool, p Point, polygon []Point) bool {
-	if !valid {
-		return false
-	}
-	return isOn(p, polygon) || isInside(p, polygon)
+func isOutside(invalid bool, p Point, polygon []Point) bool {
+	return invalid || (!isOn(p, polygon) && !isInside(p, polygon))
 }
 
 // check if point is inside the polygon
