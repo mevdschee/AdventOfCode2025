@@ -102,9 +102,9 @@ func fits(region Region, shapes []Shape) bool {
 	}
 
 	presents := []Shape{}
-	for shapeIdx, count := range region.presents {
+	for i, count := range region.presents {
 		for range count {
-			presents = append(presents, shapes[shapeIdx])
+			presents = append(presents, shapes[i])
 		}
 	}
 
@@ -125,12 +125,12 @@ func fits(region Region, shapes []Shape) bool {
 	return dfs(grid, presents, 0)
 }
 
-func dfs(grid [][]bool, presents []Shape, idx int) bool {
-	if idx == len(presents) {
+func dfs(grid [][]bool, presents []Shape, i int) bool {
+	if i == len(presents) {
 		return true
 	}
 
-	shape := presents[idx]
+	shape := presents[i]
 
 	for _, rotated := range orientations(shape) {
 		for r := 0; r <= len(grid)-len(rotated); r++ {
@@ -155,7 +155,7 @@ func dfs(grid [][]bool, presents []Shape, idx int) bool {
 							}
 						}
 					}
-					if dfs(grid, presents, idx+1) {
+					if dfs(grid, presents, i+1) {
 						return true
 					}
 					for dr := range len(rotated) {
